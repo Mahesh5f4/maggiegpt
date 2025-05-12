@@ -32,7 +32,7 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5001/api/login', { email, password });
+      const response = await axios.post('https://maggiegptbackend-1.onrender.com/api/login', { email, password });
       localStorage.setItem('token', response.data.token);
       navigate('/chat'); 
     } catch (error) {

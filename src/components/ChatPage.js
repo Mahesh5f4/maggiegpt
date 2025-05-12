@@ -89,7 +89,7 @@ const ChatPage = () => {
     const fetchUserProfile = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('http://localhost:5001/api/profile', {
+        const res = await axios.get('https://maggiegptbackend-1.onrender.com/api/profile', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserName(res.data.name);
@@ -107,7 +107,7 @@ const ChatPage = () => {
     const fetchChatHistory = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('http://localhost:5001/api/chat/history', {
+        const res = await axios.get('https://maggiegptbackend-1.onrender.com/api/chat/history', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setChatHistory(res.data.chatHistory);
@@ -140,7 +140,7 @@ const ChatPage = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5001/api/chat',
+        'https://maggiegptbackend-1.onrender.com/api/chat',
         { prompt: message },
         { headers: { Authorization: `Bearer ${token}` } }
       );

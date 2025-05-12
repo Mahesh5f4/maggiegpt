@@ -44,7 +44,7 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:5001/api/register', { name, email, password });
+      await axios.post('https://maggiegptbackend-1.onrender.com/api/register', { name, email, password });
       setLoading(false);
       navigate('/login');
     } catch (error) {
