@@ -19,8 +19,9 @@ import SendIcon from '@mui/icons-material/Send';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 const scrollingTextStyle = {
   display: 'block',
@@ -54,7 +55,7 @@ const MarkdownWithCopy = ({ content }) => {
               <ContentCopyIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-          <SyntaxHighlighter language={language} style={oneDark} wrapLongLines>
+          <SyntaxHighlighter language={language} style={oneLight} wrapLongLines>
             {code}
           </SyntaxHighlighter>
         </Box>
@@ -180,6 +181,12 @@ const ChatPage = () => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
+
   const handleStopChat = () => {
     if (typingInterval) {
       clearInterval(typingInterval);
@@ -198,28 +205,49 @@ const ChatPage = () => {
     setImageUrl(null);
   };
 
+  const scrollToTop = () => {
+    chatRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <Box
       sx={{
         minHeight: '100vh',
-        bgcolor: '#121212',
+        bgcolor: '#f5f5f5',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, #0f0f0f, #1f1f1f)'
+        background: 'linear-gradient(135deg, #f5f7fa, #e4e8eb)'
       }}
     >
-      <Container maxWidth="md" sx={{ mt: 4, fontFamily: '"Poppins", sans-serif', backgroundColor: 'rgba(30, 30, 30, 0.75)', color: '#fff', borderRadius: 2, boxShadow: 3, p: 4 }}>
+      <Container maxWidth="md" sx={{
+        mt: 4,
+        fontFamily: '"Poppins", sans-serif',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        color: '#333',
+        borderRadius: 2,
+        boxShadow: '0 10px 20px rgba(0, 0, 0, 0.1)',
+        p: 4,
+        transition: 'transform 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-5px)'
+        }
+      }}>
         <Grid container justifyContent="space-between" alignItems="center" mb={4}>
           <Grid item>
-            <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold', color: '#00ADB5', className: 'animated-text' }}>
+            <Typography variant="h3" gutterBottom sx={{
+              fontWeight: 'bold',
+              color: '#00ADB5',
+              className: 'animated-text',
+              textShadow: '0 0 10px rgba(0, 173, 181, 0.3)'
+            }}>
               MaggieGPT
             </Typography>
           </Grid>
           <Grid item>
             <Tooltip title="Account settings">
               <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-                <AccountCircleIcon fontSize="large" sx={{ color: '#fff' }} />
+                <AccountCircleIcon fontSize="large" sx={{ color: '#333' }} />
               </IconButton>
             </Tooltip>
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
@@ -235,9 +263,14 @@ const ChatPage = () => {
 
         <Box display="flex" justifyContent="space-between" mb={2}>
           <Typography variant="h6">Chat History</Typography>
-          <IconButton color="primary" onClick={handleNewChat}>
-            New Chat
-          </IconButton>
+          <Box>
+            <IconButton color="primary" onClick={handleNewChat}>
+              New Chat
+            </IconButton>
+            <IconButton color="primary" onClick={scrollToTop}>
+              <ArrowUpwardIcon />
+            </IconButton>
+          </Box>
         </Box>
 
         <Box
@@ -249,19 +282,19 @@ const ChatPage = () => {
             borderRadius: 2,
             p: 2,
             mb: 2,
-            backgroundColor: '#333',
+            backgroundColor: '#fff',
             scrollBehavior: 'smooth',
           }}
         >
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-              <CircularProgress sx={{ color: '#fff' }} />
+              <CircularProgress sx={{ color: '#00ADB5' }} />
             </Box>
           ) : (
             <>
               {chatHistory.map((msg, idx) => (
                 <Box key={idx} sx={{ mb: 2 }}>
-                  <Typography sx={{ fontWeight: msg.role === 'user' ? 'bold' : 'normal', color: msg.role === 'user' ? '#1976d2' : '#fff', mb: 0.5 }}>
+                  <Typography sx={{ fontWeight: msg.role === 'user' ? 'bold' : 'normal', color: msg.role === 'user' ? '#1976d2' : '#333', mb: 0.5 }}>
                     {msg.role === 'user' ? 'You:' : 'MaggieGPT:'}
                   </Typography>
                   {msg.role === 'ai' ? (
@@ -270,7 +303,7 @@ const ChatPage = () => {
                       {imageUrl && <img src={imageUrl} alt="Generated" style={{ width: '100%', maxWidth: '500px', marginTop: '16px' }} />}
                     </>
                   ) : (
-                    <Typography sx={{ color: '#fff' }}>{msg.content}</Typography>
+                    <Typography sx={{ color: '#333' }}>{msg.content}</Typography>
                   )}
                 </Box>
               ))}
@@ -291,23 +324,37 @@ const ChatPage = () => {
               placeholder="Type your message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
               variant="outlined"
               sx={{
-                backgroundColor: '#424242',
-                color: '#fff',
-                '& .MuiOutlinedInput-root': { backgroundColor: '#424242' },
+                backgroundColor: '#f0f0f0',
+                color: '#333',
+                '& .MuiOutlinedInput-root': { backgroundColor: '#f0f0f0' },
+                borderRadius: 2,
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
               }}
             />
           </Grid>
           <Grid item xs={isMobile ? 3 : 2}>
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                <IconButton color="primary" onClick={handleSendMessage} fullWidth>
+                <IconButton color="primary" onClick={handleSendMessage} fullWidth sx={{
+                  backgroundColor: '#00ADB5',
+                  '&:hover': { backgroundColor: '#008a91' },
+                  borderRadius: 2,
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                }}>
                   <SendIcon />
                 </IconButton>
               </Grid>
               <Grid item xs={6}>
-                <Button onClick={handleStopChat} sx={{ color: '#fff', backgroundColor: '#d32f2f', '&:hover': { backgroundColor: '#c62828' } }} fullWidth>
+                <Button onClick={handleStopChat} sx={{
+                  color: '#fff',
+                  backgroundColor: '#d32f2f',
+                  '&:hover': { backgroundColor: '#c62828' },
+                  borderRadius: 2,
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                }} fullWidth>
                   Stop
                 </Button>
               </Grid>
